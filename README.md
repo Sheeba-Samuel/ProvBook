@@ -7,12 +7,20 @@ Every cell is extended with a provenance area with a slider. The provenance area
 2. notebook_rdf
   Convert Jupyter Notebooks to RDF and the converted RDF back to Jupyter Notebooks.
 
-Jupyter version support
-===============================
-The extensions work with Jupyter 5.x. 
+Demo
+----
+A video showing the installation and use of ProvBook with an example is available [here](https://doi.org/10.6084/m9.figshare.6401096) 
 
 Installation
 -------------
+
+Prerequisite  
+Python3  
+[Jupyter Notebook](https://jupyter.org/)  
+
+Installation steps of Jupyter Notebook can be found [here](http://jupyter.org/install)
+
+Installation of ProvBook  
 ```bash
 git clone https://github.com/Sheeba-Samuel/ProvBook
 ```
@@ -29,6 +37,10 @@ To download provenance information as RDF, Install notebook_rdf Extension. Chang
 ```bash
 cd ../notebook_rdf
 sudo python3 setup.py install
+```
+After installing the extension run the notebook
+```bash
+jupyter notebook
 ```
 Example usage of notebook_rdf
 -----------------------------
@@ -59,6 +71,11 @@ A user can clear the provenance data from the metadata of the notebook from Cell
 ![Provenance Menu](provbook/screenshot3.png)
 The notebook can be downloaded as RDF from the File Menu -> Download as -> RDF (.ttl).
 ![Download notebook as a Turtle document](provbook/screenshot1.png)
+
+Jupyter version support
+------------------------
+
+The extensions work with Jupyter 5.x. 
 
 
 Internals
