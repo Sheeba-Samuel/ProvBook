@@ -22,3 +22,5 @@ Convert your RDF to notebook
     python3.5 notebook_rdf notebook_rdf.ttl
     or
     python3.5 notebook_rdf --from RDF notebook_rdf.ttl --to notebook
+    
+The example notebook converted to rdf and back to notebook is available in the examples directory.
