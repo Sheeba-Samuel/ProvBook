@@ -111,7 +111,7 @@ define([
     //Add provenance data to the metadata of the code cell.
     function update_provenance_metadata_codecell (cell) {
       if (!cell.metadata.hasOwnProperty("provenance")) {
-          cell.metadata.provenance = [];
+          cell.metadata.provenance = [];        
       }
       var execution_time, start_time, end_time = 'Unknown';
       if (cell.metadata.hasOwnProperty("ExecutionTime")) {
@@ -124,8 +124,8 @@ define([
         }
       }
       cell.metadata.provenance.push({
-        output: cell.output_area.outputs,
-        content: cell.get_text(),
+        outputs: cell.output_area.outputs,
+        source: cell.get_text(),
         start_time: start_time,
         end_time: end_time,
         execution_time: execution_time,
@@ -255,17 +255,17 @@ define([
       if (end_time) {
         end_time = moment(end_time).format();
       }
-      var source = provenance[execution_index]['content'];
+      var source = provenance[execution_index]['source'];
       var output_entry = '';
-      if ('output' in provenance[execution_index] && !Array.isArray(provenance[execution_index]['output'])) {
-        var output_val = provenance[execution_index]['output'];
+      if ('outputs' in provenance[execution_index] && !Array.isArray(provenance[execution_index]['outputs'])) {
+        var output_val = provenance[execution_index]['outputs'];
         if (output_val) {
           output_entry = '<p class="para_text_wrap">Output:\n' + output_val + '</p>';
-          output_entry = get_output(provenance[execution_index]['output']);
+          output_entry = get_output(provenance[execution_index]['outputs']);
         }
       }
-      else if ('output' in provenance[execution_index] && provenance[execution_index]['output'].length > 0) {
-          output_entry = get_output(provenance[execution_index]['output']);
+      else if ('outputs' in provenance[execution_index] && provenance[execution_index]['outputs'].length > 0) {
+          output_entry = get_output(provenance[execution_index]['outputs']);
       }
 
       var prov_hist = '<p>End Time: ' + end_time +'</p>' +
@@ -275,14 +275,43 @@ define([
       return prov_hist;
     }
 
-    // Update the provenance data which includes the save tim and the content for each text cell.
+    // Update the provenance data which includes the save time and the source for each text cell.
     function update_provenance_metadata_textcell(cell) {
       if (!cell.metadata['provenance']) {
         cell.metadata['provenance'] = [];
       }
       cell.metadata.provenance.push({
-        content: cell.get_text(),
+        source: cell.get_text(),
         last_modified: Jupyter.notebook.last_modified
+      });
+    }
+
+    function update_original_notebook_provenance() {
+      Jupyter.notebook.get_cells().forEach(function(cell) {
+        if (!(cell instanceof CodeCell || cell instanceof MarkdownCell || cell instanceof RawCell)) {
+              return $();
+        }
+        if (!cell.metadata['provenance']) {
+          cell.metadata['provenance'] = [];
+        
+          if (cell instanceof MarkdownCell || cell instanceof RawCell) {
+            cell.metadata.provenance.push({
+              source: cell.get_text(),
+              last_modified: Jupyter.notebook.last_modified
+            });
+          } else if (cell instanceof CodeCell ) {
+            var execution_time = 'Unknown', start_time = 'Unknown', end_time = 'Unknown';
+            cell.metadata.provenance.push({
+              outputs: cell.output_area.outputs,
+              source: cell.get_text(),
+              start_time: start_time,
+              end_time: end_time,
+              execution_time: execution_time,
+            });
+          }
+        }
+        
+
       });
     }
 
@@ -306,7 +335,7 @@ define([
           }
           $('.slider-time.' + cell_id).html(last_modified);
           $('.provenance_area.' + cell_id).html(function(){
-            var source = cell.metadata['provenance'][min_val]['content'];
+            var source = cell.metadata['provenance'][min_val]['source'];
             var prov_hist = '<div>Source: ' + source +'</div>'
             return prov_hist;
           });
@@ -319,7 +348,7 @@ define([
           }
           $('.slider-time.' + cell_id).html(last_modified);
           $('.provenance_area.' + cell_id).html(function(){
-            var source = cell.metadata['provenance'][ui.value]['content'];
+            var source = cell.metadata['provenance'][ui.value]['source'];
             var prov_hist = '<div>Source: ' + source +'</div>'
             return prov_hist;
           });
@@ -548,6 +577,7 @@ define([
         }, function on_config_load_error (reason) {
             console.warn(log_prefix, 'Using defaults after error loading config:', reason);
         }).then(function do_stuff_with_config () {
+            update_original_notebook_provenance();
             patch_CodeCell_get_callbacks();
             add_toolbar_buttons(); // Buttons for the provenance of selected and all cells
             create_provenance_menu();

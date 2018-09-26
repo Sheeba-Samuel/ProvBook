@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# Author: Sheeba Samuel, <sheeba.samuel@uni-jena.de> https://github.com/Sheeba-Samuel
 
 import os
 import os.path
@@ -155,13 +156,12 @@ def create_provenance(rdfgraph, cell,  cell_index, **kwargs):
                 output['evalue'] = output_value
                 output['traceback'] = []#row.output_errortraceback
             output_provenance.append(output)
-
         provenance_metadata['provenance'].append({
             'end_time': row.endedAtTime,
             'start_time': row.startedAtTime,
             'execution_time': row.executionTime,
-            'content': row.source_value,
-            'output': output_provenance
+            'source': row.source_value,
+            'outputs': output_provenance
             }
         )
     return provenance_metadata

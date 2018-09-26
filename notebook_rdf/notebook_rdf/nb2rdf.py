@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# Author: Sheeba Samuel, <sheeba.samuel@uni-jena.de> https://github.com/Sheeba-Samuel
 
 import os
 import os.path
@@ -18,7 +19,7 @@ class NBToRDFConverter():
     def __init__(self):
         self.g = Graph()
         self.pplan = Namespace("http://purl.org/net/p-plan/#")
-        self.reproduce = Namespace("http://fusion.cs.uni-jena.de/fusion/repr/#")
+        self.reproduce = Namespace("https://w3id.org/reproduceme#")
         self.prov = Namespace("http://www.w3.org/ns/prov/#")
         self.notebook = URIRef(self.reproduce["Notebook"])
         self.step = URIRef(self.pplan["Step"])
@@ -134,12 +135,12 @@ class NBToRDFConverter():
         for prov_index, provenance in enumerate(cell_node.metadata.provenance):
             start_time = provenance['start_time'] if 'start_time' in provenance else None
             end_time = provenance['end_time'] if 'end_time' in provenance else None
-            source = provenance['content'] if 'content' in provenance else None
+            source = provenance['source'] if 'source' in provenance else None
             source_entity = URIRef(self.reproduce["Cell" + str(cell_index) + "Execution" + str(prov_index) + "Source"]) if source else None
             execution_time = provenance['execution_time'] if 'execution_time' in provenance else None
             execution_activity = URIRef(self.reproduce["Cell" + str(cell_index) + "Execution" + str(prov_index)])
 
-            output = self.extract_output_from_cell(execution_activity, cell_index, prov_index, provenance['output']) if 'output' in provenance else None
+            output = self.extract_output_from_cell(execution_activity, cell_index, prov_index, provenance['outputs']) if 'outputs' in provenance else None
 
             self.g.add( (execution_activity, RDF.type, self.cellexecution) )
             self.g.add( (execution_activity, self.pplan.correspondsToStep, cell) )
