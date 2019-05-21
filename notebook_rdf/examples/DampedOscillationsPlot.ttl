@@ -226,6 +226,15 @@ repr:Source4 a p-plan:Variable .
 
 repr:Source5 a p-plan:Variable .
 
+repr:Cell3 a p-plan:Step ;
+    p-plan:hasInputVar repr:Source3 ;
+    p-plan:hasOutputVar repr:Output3 ;
+    p-plan:isPreceededBy repr:Cell2 ;
+    p-plan:isStepOfPlan repr:DampedOscillationsPlot ;
+    repr:hasCellType "code" ;
+    repr:hasExecutionCount 4 ;
+    repr:hasIndex 3 .
+
 repr:Cell0 a p-plan:Step ;
     p-plan:hasInputVar repr:Source0 ;
     p-plan:isStepOfPlan repr:DampedOscillationsPlot ;
@@ -236,6 +245,7 @@ repr:Cell0 a p-plan:Step ;
 repr:Cell1 a p-plan:Step ;
     p-plan:hasInputVar repr:Source1 ;
     p-plan:hasOutputVar repr:Output1 ;
+    p-plan:isPreceededBy repr:Cell0 ;
     p-plan:isStepOfPlan repr:DampedOscillationsPlot ;
     repr:hasCellType "code" ;
     repr:hasExecutionCount 2 ;
@@ -243,18 +253,11 @@ repr:Cell1 a p-plan:Step ;
 
 repr:Cell2 a p-plan:Step ;
     p-plan:hasInputVar repr:Source2 ;
+    p-plan:isPreceededBy repr:Cell1 ;
     p-plan:isStepOfPlan repr:DampedOscillationsPlot ;
     repr:hasCellType "code" ;
     repr:hasExecutionCount 3 ;
     repr:hasIndex 2 .
-
-repr:Cell3 a p-plan:Step ;
-    p-plan:hasInputVar repr:Source3 ;
-    p-plan:hasOutputVar repr:Output3 ;
-    p-plan:isStepOfPlan repr:DampedOscillationsPlot ;
-    repr:hasCellType "code" ;
-    repr:hasExecutionCount 4 ;
-    repr:hasIndex 3 .
 
 repr:DampedOscillationsPlot a repr:Notebook ;
     repr:hasKernelDisplayName "Python 2" ;
