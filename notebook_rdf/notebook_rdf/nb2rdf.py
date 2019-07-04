@@ -177,7 +177,7 @@ class NBToRDFConverter():
             self.convert_common_cell_metadata(cell, cell_node, cell_index)
             if 'cell_type' in cell_node and cell_node.cell_type == 'code':
                 self.convert_code_cell_metadata(cell, cell_node, cell_index)
-            if cell_node.execution_count:
+            if 'execution_count' in cell_node and cell_node.execution_count:
                 self.order_of_execution[cell_index] = cell_node.execution_count
 
     def add_order_of_execution(self, cell_data):
