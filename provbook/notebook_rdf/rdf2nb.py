@@ -1,7 +1,9 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 # Author: Sheeba Samuel, <sheeba.samuel@uni-jena.de> https://github.com/Sheeba-Samuel
 
+import io
 import os
 import os.path
 
@@ -156,6 +158,7 @@ def create_provenance(rdfgraph, cell,  cell_index, **kwargs):
                 output['evalue'] = output_value
                 output['traceback'] = []#row.output_errortraceback
             output_provenance.append(output)
+
         provenance_metadata['provenance'].append({
             'end_time': row.endedAtTime,
             'start_time': row.startedAtTime,
@@ -236,13 +239,13 @@ def convert_rdf_to_notebook(args):
     output_file = os.path.join(input_file_directory, notebook_name + "_rdf2nb." + output_file_extension)
     print("Converting RDF file {0} to notebook {1}".format(input_file,output_file))
 
-    notebook = open(infile).read()
+    notebook = io.open(infile).read()
     g = Graph()
     nbrdf = g.parse(infile, format="turtle")
     nbconvert_rdf = get_notebook_cells(nbrdf)
     metadata = get_notebook_metadata(nbrdf)
     nb = nbbase.new_notebook(cells=nbconvert_rdf, metadata=metadata)
     validate_result = nbbase.validate(nb)
-    with open(output_file, 'w') as fout:
+    with io.open(output_file, 'w', encoding='utf-8') as fout:
         nbformat.write(nb, fout, version=max(nbformat.versions))
         return nb

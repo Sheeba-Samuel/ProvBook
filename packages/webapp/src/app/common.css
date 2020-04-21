@@ -1,0 +1,54 @@
+
+
+body {
+  overflow: scroll !important;
+  background-color: var(--jp-layout-color1);
+  color: var(--jp-content-font-color1);
+
+  font-family: sans-serif;
+}
+
+.CodeMirror-merge {
+  background-color: var(--jp-layout-color1);
+}
+
+/* Alternative for showing single cell when cells are equal */
+.jp-Diff-unchanged {
+  margin-left: 10%;
+  width: 80%;
+}
+
+#nbdime-header {
+  margin: auto;
+  width: 90%;
+  margin-bottom: 20px;
+}
+
+#nbdime-header-banner {
+  margin-top: 10px;
+}
+
+.nbdime-header-button {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+#nbdime-header-buttonrow .nbdime-spinner {
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  border-width: 3px;
+}
+
+.nbdime-spinner {
+    border: 16px solid #eee;
+    border-top-color: #999;
+    border-bottom-color: #999;
+    border-radius: 50%;
+    animation: spin 1.3s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

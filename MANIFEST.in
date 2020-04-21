@@ -1,0 +1,37 @@
+include LICENSE.md
+include CONTRIBUTING.md
+include README.md
+
+include setupbase.py
+include pytest.ini
+include conftest.py
+
+# Documentation
+graft docs
+exclude docs/\#*
+
+# docs subdirs we want to skip
+prune docs/build
+prune docs/gh-pages
+prune docs/dist
+
+# Webapp files
+include lerna.json
+include package.json
+graft provbook/webapp
+graft packages
+prune packages/*/coverage
+prune packages/*/lib
+prune packages/*/build
+prune packages/*/node_modules
+prune packages/*/test/build
+
+# Extension files
+graft provbook/notebook_ext
+
+# Patterns to exclude from any directory
+global-exclude *~
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude .git
+global-exclude .ipynb_checkpoints

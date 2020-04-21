@@ -1,15 +1,6 @@
-/**
- * ProvBook
- * An extension that allows the user to see the provenance of a Jupyter Notebook.
- * The Provenance information includes the start, end time of an execution, the number of executions,
- * the source and the output of each execution. The provenance data can be downloaded as RDF.
- *
- * @version 0.1.0
- * @author  Sheeba Samuel, https://github.com/Sheeba-Samuel
- * @updated 2018-05-29
- *
- *
- */
+// call "provbook" and compare versions in new tab
+
+// Author: Sheeba Samuel, <sheeba.samuel@uni-jena.de> https://github.com/Sheeba-Samuel
 
 define([
     'require',
@@ -30,7 +21,7 @@ define([
     textcell,
     utils
 ) {
-    'use strict';
+    "use strict";
 
     var mod_name = 'provbook';
     var log_prefix = '[' + mod_name + ']';
@@ -111,7 +102,7 @@ define([
     //Add provenance data to the metadata of the code cell.
     function update_provenance_metadata_codecell (cell) {
       if (!cell.metadata.hasOwnProperty("provenance")) {
-          cell.metadata.provenance = [];        
+            cell.metadata.provenance = [];
       }
       var execution_time, start_time, end_time = 'Unknown';
       if (cell.metadata.hasOwnProperty("ExecutionTime")) {
@@ -287,32 +278,30 @@ define([
     }
 
     function update_original_notebook_provenance() {
-      Jupyter.notebook.get_cells().forEach(function(cell) {
-        if (!(cell instanceof CodeCell || cell instanceof MarkdownCell || cell instanceof RawCell)) {
-              return $();
-        }
-        if (!cell.metadata['provenance']) {
-          cell.metadata['provenance'] = [];
-        
-          if (cell instanceof MarkdownCell || cell instanceof RawCell) {
-            cell.metadata.provenance.push({
-              source: cell.get_text(),
-              last_modified: Jupyter.notebook.last_modified
-            });
-          } else if (cell instanceof CodeCell ) {
-            var execution_time = 'Unknown', start_time = 'Unknown', end_time = 'Unknown';
-            cell.metadata.provenance.push({
-              outputs: cell.output_area.outputs,
-              source: cell.get_text(),
-              start_time: start_time,
-              end_time: end_time,
-              execution_time: execution_time,
-            });
+        Jupyter.notebook.get_cells().forEach(function(cell) {
+          if (!(cell instanceof CodeCell || cell instanceof MarkdownCell || cell instanceof RawCell)) {
+                return $();
           }
-        }
-        
+          if (!cell.metadata['provenance']) {
+            cell.metadata['provenance'] = [];
 
-      });
+            if (cell instanceof MarkdownCell || cell instanceof RawCell) {
+              cell.metadata.provenance.push({
+                source: cell.get_text(),
+                last_modified: Jupyter.notebook.last_modified
+              });
+            } else if (cell instanceof CodeCell ) {
+              var execution_time = 'Unknown', start_time = 'Unknown', end_time = 'Unknown';
+              cell.metadata.provenance.push({
+                outputs: cell.output_area.outputs,
+                source: cell.get_text(),
+                start_time: start_time,
+                end_time: end_time,
+                execution_time: execution_time,
+              });
+            }
+          }
+        });
     }
 
     // Create slider and provenance area to display the provenance of the text cell.
@@ -512,7 +501,12 @@ define([
   					get_provenance_of_all_cells();
   				}
         }, 'provenance-all-cell', 'provenance_all_cell'),
-  		])).find('.btn').attr('id', 'provenance_all_cell_btn');
+        Jupyter.actions.register({
+            icon: 'fa-adjust',
+            help   : 'Provenance Difference of selected cell',
+            handler : ProvBookDiffView
+        }, 'provenance_diff_selected_cell_btn', 'provbookdiff'),
+  		]));
 	  }
 
 
@@ -552,9 +546,110 @@ define([
       });
     }
 
+    // Custom util functions:
+    var reStripLeading = /^\/+/
+    var stripLeft = function (string) {
+        return string.replace(reStripLeading, '');
+    };
 
-    function load_jupyter_extension () {
-      if ($.ui === undefined ) {
+    var path_join = function () {
+        return stripLeft(utils.url_path_join.apply(this, arguments));
+    }
+
+
+    // Create provenance area for each cell
+    function create_provenance_book_diff_area(cell) {
+        var cell_id = cell.cell_id;
+        var select_base, select_remote;
+        var provenance_book_diff_area = cell.element.find('.provenance_book_diff_area');
+        var base_selected_execution = 0, remote_selected_execution = 1;
+        if (provenance_book_diff_area.length < 1) {
+            provenance_book_diff_area = $('<div id="prov_diff_area"><p><strong>Provenance Difference</strong>: Select the options to see the difference between two executions.</p></div>')
+                .addClass('provenance_book_diff_area').addClass(cell_id)
+                .insertAfter(cell.element.find('.input_area'));
+            select_base = $("<select></select>").attr("name", "provenance_diff_base")
+                                                .attr("class", "provenance_diff_base " + cell_id)
+                                                .attr("id", "provenance_diff_base " + cell_id);
+            select_base.on('change', function(e){
+                base_selected_execution = this.selectedIndex;
+                remote_selected_execution = select_remote[0].selectedIndex;
+                getprovdiff(base_selected_execution, remote_selected_execution);
+            });
+            select_base.appendTo(provenance_book_diff_area);
+
+            select_remote = $("<select></select>").attr("name", "provenance_diff_remote")
+                                                .attr("class", "provenance_diff_remote " + cell_id)
+                                                .attr("id", "provenance_diff_remote " + cell_id);
+            select_remote.on('change', function(e){
+                base_selected_execution = select_base[0].selectedIndex;
+                remote_selected_execution = this.selectedIndex;
+                getprovdiff(base_selected_execution, remote_selected_execution);
+            });
+            select_remote.appendTo(provenance_book_diff_area);
+            var cell_provenance = cell.metadata['provenance'];
+            $('.provenance_book_diff_area.' + cell_id).html(function(){
+                add_option(select_base, cell_provenance);
+                add_option(select_remote, cell_provenance);
+            });
+
+        }
+
+
+        return provenance_book_diff_area;
+      }
+
+    function add_option(select_element, cell_provenance) {
+        for (var i = 0; i < cell_provenance.length; i++) {
+            if (i==0) {
+                var option = $("<option></option>")
+                        .attr("class", i)
+                        .text("Original Execution");
+            } else if ("start_time" in cell_provenance[i] ) {
+                var option = $("<option></option>")
+                        .attr("class", i)
+                        .text(cell_provenance[i]["start_time"]);
+            }
+            if(select_element) {
+                select_element.append(option);
+            }
+        }
+    }
+
+      // Toggle the display
+    function toggle_provenance_diff_display (cell, classname) {
+
+        var cell_id = cell.cell_id;
+        var provdiff_area = $('.provenance_book_diff_area.' + cell_id);
+        provdiff_area.toggle($("." + classname).hasClass('active'));
+
+    }
+
+
+    var ProvBookDiffView = function () {
+        var cell = Jupyter.notebook.get_selected_cell();
+        var cell_id = cell.cell_id;
+        create_provenance_book_diff_area(cell);
+        var classname = 'fa-adjust';
+        $("." + classname).toggleClass("active");
+        toggle_provenance_diff_display(cell, classname);
+
+    };
+
+    var getprovdiff = function (base_selected_execution, remote_selected_execution) {
+        var cell = Jupyter.notebook.get_selected_cell();
+        var nb_dir = utils.url_path_split(Jupyter.notebook.notebook_path)[0];
+        var name = Jupyter.notebook.notebook_name;
+        var base = path_join(nb_dir, name);
+        var url = window.location.origin + '/' + path_join(Jupyter.notebook.base_url, 'provbookdiff');
+        var cell_index = Jupyter.notebook.find_cell_index(cell);
+                url = url + '?base=' + base + '&cell_index=' + cell_index + '&base_selected_execution=' + base_selected_execution +
+          '&remote_selected_execution=' + remote_selected_execution;
+
+        window.open(url);
+    };
+
+    var register_provbook = function() {
+        if ($.ui === undefined ) {
             requirejs(['jquery-ui'], function ($) {}, function (err) {
                 // try to load using the older, non-standard name (without hyphen)
                 requirejs(['jqueryui'], function ($) {}, function (err) {
@@ -587,9 +682,14 @@ define([
         }).catch(function on_error (reason) {
             console.error(log_prefix, 'Error:', reason);
         });
-    }
+    };
+
+
+    var load_ipython_extension = function() {
+        register_provbook();
+    };
 
     return {
-      load_ipython_extension : load_jupyter_extension
+        load_ipython_extension : load_ipython_extension
     };
 });

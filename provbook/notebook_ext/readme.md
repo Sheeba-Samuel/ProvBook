@@ -3,6 +3,7 @@ ProvBook: Provenance of the Notebook.
 
 This extension displays the provenance of each notebook cell.
 Every cell is extended with a provenance area with a slider. The provenance area shows the history of the execution of each code cells. As you move the slider, you could see the start and end time of each execution, how long it took to execute, the number of runs, the source and output of each execution. It also shows the provenance of text cells where it shows the the modified time and the source.
+The ProvBookDiff also provides the difference of the provenance of each notebook cell.
 
 Installation
 -------------

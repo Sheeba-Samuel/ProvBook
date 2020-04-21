@@ -1,7 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Author: Sheeba Samuel, <sheeba.samuel@uni-jena.de> https://github.com/Sheeba-Samuel
 
+import io
 import os
 import os.path
 
@@ -30,7 +31,6 @@ class NBToRDFConverter():
         self.kernel = URIRef(self.reproduce["Kernel"])
         self.setting = URIRef(self.reproduce["Setting"])
         self.cell_execution_count = {}
-        self.order_of_execution = {}
         self.initialise_graph()
 
     def initialise_graph(self):
@@ -177,25 +177,16 @@ class NBToRDFConverter():
             self.convert_common_cell_metadata(cell, cell_node, cell_index)
             if 'cell_type' in cell_node and cell_node.cell_type == 'code':
                 self.convert_code_cell_metadata(cell, cell_node, cell_index)
-            if 'execution_count' in cell_node and cell_node.execution_count:
-                self.order_of_execution[cell_index] = cell_node.execution_count
 
-    def add_order_of_execution(self, cell_data):
-        number_of_cells = len(self.order_of_execution)
-        self.order_of_execution = sorted(self.order_of_execution.items(), key=lambda x: x[1])
-        for cell_index, order in enumerate(self.order_of_execution):
-            first_cell = URIRef(self.reproduce["Cell" + str(self.order_of_execution[cell_index][0])])
-            if cell_index < number_of_cells-1:
-                second_cell = URIRef(self.reproduce["Cell" + str(self.order_of_execution[cell_index+1][0])])
-                self.g.add( (second_cell, self.pplan.isPreceededBy, first_cell) )
 
 
     def convert_to_rdf(self, notebook_name, notebook_json):
         format = 'turtle'
+        notebook_name = ''.join(nb_name for nb_name in notebook_name if nb_name.isalnum())
         for section in notebook_json:
             if section == 'cells':
                 self.convert_cell_metadata(notebook_name, notebook_json[section])
-                self.add_order_of_execution(notebook_json[section])
+
             if section == 'metadata':
                 self.convert_notebook_metadata(notebook_name, notebook_json[section])
         return self.g.serialize(format=format).decode('utf-8')
@@ -209,8 +200,8 @@ class NBToRDFConverter():
         output_file_extension = 'ttl'
         output_file = os.path.join(input_file_directory, notebook_name + "." + output_file_extension)
 
-        notebook = open(infile).read()
+        notebook = io.open(infile).read()
         notebook_json = nbformat.reads(notebook, as_version=4)
         nbconvert_rdf = self.convert_to_rdf(notebook_name, notebook_json)
-        open(output_file, 'w').write(str(nbconvert_rdf))
-        return str(nbconvert_rdf)
+        io.open(output_file, 'w', encoding='utf-8').write(nbconvert_rdf)
+        return nbconvert_rdf

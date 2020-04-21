@@ -1,0 +1,14 @@
+*.pyc
+*~
+*.egg-info
+__pycache__
+.ipynb_checkpoints
+dist
+build
+MANIFEST
+.coverage
+.cache
+.pytest_cache
+**/.vscode/
+**/node_modules/
+*.tsbuildinfo
