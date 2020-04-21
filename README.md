@@ -1,11 +1,11 @@
 # ProvBook: Provenance of the Notebook.
-This is a complete package that captures and displays the provenance of different notebook extensions, downloads the provenance information in RDF and displays the provenance difference of several executions of each notebook cell.
-ProvBook provides extensions to capture and display the provenance of each notebook cell. It also shows the difference between the provenance of two executions of a notebook cell.
-Every cell is extended with a provenance area with a slider. The provenance area shows the history of the execution of each code cells. As you move the slider, you could see the start and end time of each execution, how long it took to execute, the number of runs, the source, and output of each execution. It also shows the provenance of text cells where it shows the modified time and the source. ProvBook provides three features:
+This is a complete package that captures and displays the provenance of Jupyter Notebook executions, downloads the provenance information in RDF (Resource Description Framework) and displays the provenance difference of several executions of each notebook cell.
+
+ProvBook provides three features:
 1. provbook :
   Displays the provenance of a Jupyter Notebook.
 2. notebook_rdf :
-  Convert Jupyter Notebooks to RDF and the converted RDF back to Jupyter Notebooks.
+  Converts Jupyter Notebooks to RDF and the converted RDF back to Jupyter Notebooks.
 3. provbookdiff :
    Displays the difference in the provenance of two executions of a Jupyter Notebook code cell along with the input and the output.
 
@@ -34,20 +34,25 @@ sudo pip install ProvBook
 ```
 
 ## ProvBook
-The module provides the provenance of the execution of cells. The screenshot shows the toolbar button for displaying the provenance of selected or all cells.
+The module provides the provenance of the execution of cells. It captures and stores the provenance of the execution of the cells over the course of time. Every cell is extended with a provenance area with a slider. The provenance area shows the history of the execution of each code cell. The provenance information of the cell execution includes the start and
+end time of each execution, the total time it took to run the code cell, the source code and the output got during that particular execution. It also shows the provenance of text cells where it displays the modified time and the source.
+
+The screenshot shows the toolbar button for displaying the provenance of selected or all cells.
 ![Provenance of a code cell](provbook/notebook_ext/ProvBook1.png)
 
 
-The Provenance Menu.
+ProvBook adds a provenance menu in the Jupyter Notebook interface as shown in the screenshot.
+![Provenance Menu](provbook/notebook_ext/ProvBook2.png)
 
 A user can toggle the provenance display for a selected cell from Cell -> Provenance -> Toggle visibility (selected).
 A user can clear the provenance data from the metadata of the notebook from Cell -> Provenance -> Clear (all).
 
-![Provenance Menu](provbook/notebook_ext/ProvBook2.png)
+
 
 notebook_rdf
 ------------
-This module converts Jupyter Notebooks to RDF and the converted RDF back to Jupyter Notebooks. This is a command-line utility which takes a notebook as input and generates the RDF Turtle file. The RDF is generated using the [REPRODUCE-ME ontology](https://w3id.org/reproduceme/research) extended from W3C standard PROV-O and the P-Plan ontology. The RDF generated from the notebook can be converted back to a Jupyter Notebook. The notebook can be downloaded as RDF from the Notebook interface.
+ProvBook provides the user the ability to convert the notebooks into RDF along with the provenance traces and execution environment attributes. This helps to semantically represent the provenance information of notebook execution.
+This is a command-line utility which takes a notebook as input and generates the RDF Turtle file. The RDF is generated using the [REPRODUCE-ME ontology](https://w3id.org/reproduceme/research) extended from W3C standard PROV-O and the P-Plan ontology. The RDF generated from the notebook can be converted back to a Jupyter Notebook. The notebook can be downloaded as RDF from the Notebook interface.
 
 ### Example usage of notebook_rdf
 Convert your notebook to RDF
@@ -72,9 +77,13 @@ The notebook can also be downloaded as RDF from the File Menu -> Download as -> 
 
 ProvBookDiff
 ------------
-This module displays the difference in the provenance of any two executions of a Jupyter Notebook code cell along with the input and the output.
-The provbookdiff is based on the [nbdime](https://github.com/jupyter/nbdime). It extends the nbdime tool and calls the API from nbdime to see the difference between the provenance of each execution of a notebook code cell. The screenshot shows the ProvBookDiff of two different executions to see the difference in the input and the output.
+This module helps users to compare the results of different executions of a Jupyter Notebook. The user is provided with a dropdown to select two executions based on the starting time of the executions. When the user selects the two executions, the
+difference in the input and the output of these executions are shown side by side as shown in the screenshot.
 ![ProvBookDiff](provbook/notebook_ext/ProvBookDiff.png)
+If there are differences in the input or output, the difference is highlighted for the user to distinguish the change.
+The users can select the original experimenter’s execution with their own execution of the Jupyter Notebook as well.
+The provbookdiff is based on the [nbdime](https://github.com/jupyter/nbdime). It extends the nbdime tool and calls the API from nbdime to see the difference between the provenance of each execution of a notebook code cell. The screenshot shows the ProvBookDiff of two different executions to see the difference in the input and the output.
+
 
 Jupyter version support
 ------------------------
