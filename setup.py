@@ -61,10 +61,14 @@ cmdclass['js'] = combine_commands(
     ensure_targets(jstargets),
 )
 
+with open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setup_args = dict(
     name            = name,
     description     = "Provenance and differencing of the Jupyter Notebook Execution",
+    long_description = long_description,
+    long_description_content_type = 'text/markdown',
     version         = version,
     scripts         = glob(pjoin('scripts', '*')),
     cmdclass        = cmdclass,
