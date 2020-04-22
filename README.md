@@ -35,7 +35,7 @@ pip install provbook
 The module provides the provenance of the execution of cells. It captures and stores the provenance of the execution of the cells over the course of time. Every cell is extended with a provenance area with a slider. The provenance area shows the history of the execution of each code cell. The provenance information of the cell execution includes the start and
 end time of each execution, the total time it took to run the code cell, the source code and the output got during that particular execution. It also shows the provenance of text cells where it displays the modified time and the source.
 
-ProbBook icons are added in the toolbar for displaying the provenance of selected or all cells and the provenance difference of executions of cells.
+ProvBook icons are added in the toolbar for displaying the provenance of selected or all cells and the provenance difference of executions of cells.
 ![Provenance of a code cell](provbook/notebook_ext/ProvBook1.png)
 
 
