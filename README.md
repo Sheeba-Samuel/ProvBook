@@ -23,12 +23,10 @@ Publication
 Installation
 -------------
 
-Prerequisite
-[Jupyter Notebook](https://jupyter.org/)
+Prerequisite: [Jupyter Notebook](https://jupyter.org/)
 
-Installation steps of Jupyter Notebook can be found [here](http://jupyter.org/install)
+Install provbook with pip:
 
-Installation of ProvBook
 ```bash
 pip install provbook
 ```
@@ -84,12 +82,6 @@ difference in the input and the output of these executions are shown side by sid
 If there are differences in the input or output, the difference is highlighted for the user to distinguish the change.
 The users can select the original experimenter’s execution with their own execution of the Jupyter Notebook as well.
 The provbookdiff is based on the [nbdime](https://github.com/jupyter/nbdime). It extends the nbdime tool and calls the API from nbdime to see the difference between the provenance of each execution of a notebook code cell.
-
-Jupyter version support
-------------------------
-
-The extensions work with Jupyter 5.x.
-
 
 Internals
 -----------
