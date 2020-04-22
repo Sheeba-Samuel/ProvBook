@@ -30,18 +30,18 @@ Installation steps of Jupyter Notebook can be found [here](http://jupyter.org/in
 
 Installation of ProvBook
 ```bash
-sudo pip install ProvBook
+sudo pip install provbook
 ```
 
 ## ProvBook
 The module provides the provenance of the execution of cells. It captures and stores the provenance of the execution of the cells over the course of time. Every cell is extended with a provenance area with a slider. The provenance area shows the history of the execution of each code cell. The provenance information of the cell execution includes the start and
 end time of each execution, the total time it took to run the code cell, the source code and the output got during that particular execution. It also shows the provenance of text cells where it displays the modified time and the source.
 
-The screenshot shows the toolbar button for displaying the provenance of selected or all cells.
+ProbBook is added in the toolbar for displaying the provenance of selected or all cells.
 ![Provenance of a code cell](provbook/notebook_ext/ProvBook1.png)
 
 
-ProvBook adds a provenance menu in the Jupyter Notebook interface as shown in the screenshot.
+ProvBook adds a provenance menu in the Jupyter Notebook interface.
 ![Provenance Menu](provbook/notebook_ext/ProvBook2.png)
 
 A user can toggle the provenance display for a selected cell from Cell -> Provenance -> Toggle visibility (selected).
@@ -78,7 +78,7 @@ The notebook can also be downloaded as RDF from the File Menu -> Download as -> 
 ProvBookDiff
 ------------
 This module helps users to compare the results of different executions of a Jupyter Notebook. The user is provided with a dropdown to select two executions based on the starting time of the executions. When the user selects the two executions, the
-difference in the input and the output of these executions are shown side by side as shown in the screenshot.
+difference in the input and the output of these executions are shown side by side.
 ![ProvBookDiff](provbook/notebook_ext/ProvBookDiff.png)
 If there are differences in the input or output, the difference is highlighted for the user to distinguish the change.
 The users can select the original experimenter’s execution with their own execution of the Jupyter Notebook as well.
