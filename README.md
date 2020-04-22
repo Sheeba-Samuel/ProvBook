@@ -23,25 +23,24 @@ Publication
 Installation
 -------------
 
-Prerequisite
-[Jupyter Notebook](https://jupyter.org/)
+Prerequisite: [Jupyter Notebook](https://jupyter.org/)
 
-Installation steps of Jupyter Notebook can be found [here](http://jupyter.org/install)
+Install provbook with pip:
 
-Installation of ProvBook
 ```bash
-sudo pip install provbook
+pip install provbook
 ```
 
 ## ProvBook
 The module provides the provenance of the execution of cells. It captures and stores the provenance of the execution of the cells over the course of time. Every cell is extended with a provenance area with a slider. The provenance area shows the history of the execution of each code cell. The provenance information of the cell execution includes the start and
 end time of each execution, the total time it took to run the code cell, the source code and the output got during that particular execution. It also shows the provenance of text cells where it displays the modified time and the source.
 
-ProbBook is added in the toolbar for displaying the provenance of selected or all cells.
+ProbBook icons are added in the toolbar for displaying the provenance of selected or all cells and the provenance difference of executions of cells.
 ![Provenance of a code cell](provbook/notebook_ext/ProvBook1.png)
 
 
-ProvBook adds a provenance menu in the Jupyter Notebook interface.
+ProvBook also adds a provenance menu in the Jupyter Notebook interface.
+
 ![Provenance Menu](provbook/notebook_ext/ProvBook2.png)
 
 A user can toggle the provenance display for a selected cell from Cell -> Provenance -> Toggle visibility (selected).
@@ -82,14 +81,7 @@ difference in the input and the output of these executions are shown side by sid
 ![ProvBookDiff](provbook/notebook_ext/ProvBookDiff.png)
 If there are differences in the input or output, the difference is highlighted for the user to distinguish the change.
 The users can select the original experimenter’s execution with their own execution of the Jupyter Notebook as well.
-The provbookdiff is based on the [nbdime](https://github.com/jupyter/nbdime). It extends the nbdime tool and calls the API from nbdime to see the difference between the provenance of each execution of a notebook code cell. The screenshot shows the ProvBookDiff of two different executions to see the difference in the input and the output.
-
-
-Jupyter version support
-------------------------
-
-The extensions work with Jupyter 5.x.
-
+The provbookdiff is based on the [nbdime](https://github.com/jupyter/nbdime). It extends the nbdime tool and calls the API from nbdime to see the difference between the provenance of each execution of a notebook code cell.
 
 Internals
 -----------
