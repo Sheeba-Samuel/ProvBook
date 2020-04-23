@@ -41,9 +41,12 @@ ProvBook icons are added in the toolbar for displaying the provenance of selecte
 ![Provenance of a code cell](provbook/notebook_ext/ProvBook1.png)
 
 
+![ProvBook](provbook/notebook_ext/ProvBook2.png)
+
+
 ProvBook also adds a provenance menu in the Jupyter Notebook interface.
 
-![Provenance Menu](provbook/notebook_ext/ProvBook2.png)
+![Provenance Menu](provbook/notebook_ext/ProvBook3.png)
 
 A user can toggle the provenance display for a selected cell from Cell -> Provenance -> Toggle visibility (selected).
 A user can clear the provenance data from the metadata of the notebook from Cell -> Provenance -> Clear (all).
@@ -78,11 +81,11 @@ The notebook can also be downloaded as RDF from the File Menu -> Download as -> 
 
 Diff of Jupyter Notebook Runs
 -----------------------------
-This module helps users to compare the results of different executions of a Jupyter Notebook. The user is provided with a dropdown to select two executions based on the starting time of the executions. When the user selects the two executions, the
-difference in the input and the output of these executions are shown side by side.
-![ProvBookDiff](provbook/notebook_ext/ProvBookDiff.png)
+This module helps users to compare the results of different executions of a Jupyter Notebook. The user is provided with a dropdown to select two executions based on the starting time of the executions. The users can select the original experimenter’s execution with their own execution of the Jupyter Notebook as well.
+![ProvBookDiff Selection](provbook/notebook_ext/ProvBookDiff1.png)
+ When the user selects the two executions, the difference in the input and the output of these executions are shown side by side.
+![ProvBookDiff](provbook/notebook_ext/ProvBookDiff2.png)
 If there are differences in the input or output, the difference is highlighted for the user to distinguish the change.
-The users can select the original experimenter’s execution with their own execution of the Jupyter Notebook as well.
 The provbookdiff is based on the [nbdime](https://github.com/jupyter/nbdime). It extends the nbdime tool and calls the API from nbdime to see the difference between the provenance of each execution of a notebook code cell.
 
 Internals
