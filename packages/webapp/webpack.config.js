@@ -15,7 +15,7 @@ module.exports = {
       { test: /\.css$/, use: ['style-loader', 'css-loader'] },
       { test: /\.ipynb$/, type: 'json' },
       { test: /\.ts$/, loader: 'ts-loader' },
-      { test: /\.js$/, loader: "source-map-loader" },
+      { test: /\.js$/, loader: "source-map-loader", exclude: [/node_modules/, /build/, /__test__/] },
       { test: /\.html$/, loader: 'file-loader' },
       // jquery-ui loads some images
       { test: /\.(jpg|png|gif)$/, loader: 'file-loader' },

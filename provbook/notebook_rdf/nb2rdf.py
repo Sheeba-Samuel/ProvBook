@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # Author: Sheeba Samuel, <sheeba.samuel@uni-jena.de> https://github.com/Sheeba-Samuel
 
+import six
 import io
 import os
 import os.path
@@ -189,7 +190,7 @@ class NBToRDFConverter():
 
             if section == 'metadata':
                 self.convert_notebook_metadata(notebook_name, notebook_json[section])
-        return self.g.serialize(format=format).decode('utf-8')
+        return self.g.serialize(format=format)
 
 
     def convert_notebook_to_rdf(self, args):
@@ -203,5 +204,5 @@ class NBToRDFConverter():
         notebook = io.open(infile).read()
         notebook_json = nbformat.reads(notebook, as_version=4)
         nbconvert_rdf = self.convert_to_rdf(notebook_name, notebook_json)
-        io.open(output_file, 'w', encoding='utf-8').write(nbconvert_rdf)
+        io.open(output_file, 'w').write(six.ensure_text(nbconvert_rdf))
         return nbconvert_rdf
